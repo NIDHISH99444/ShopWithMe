@@ -1,0 +1,126 @@
+{% extends './base.html' %} {% load tshirt_tags %} 
+
+{% load filter_tags %} 
+{% block content %}
+<div class="container-fluid p-2 m-1">
+  <div class="row">
+    <div class="col-2">
+      <!-- adding filters -->
+      <form id="filterForm" action="/">
+        <div>
+          <!-- brand -->
+          <div class="form-group">
+            <label for="brand">Brand</label>
+            <select onchange="submitForm()" name="brand" class="form-control" id="brand">
+              <option value="">Select Brand</option>
+              {% for bd in brand %}
+              <option 
+              {% selected_atribute request.GET.brand bd.slug %}
+              value="{{bd.slug}}">{{bd.title}}</option>
+
+              {% endfor %}
+            </select>
+          </div>
+          <!-- neck type -->
+          <div class="form-group">
+            <label for="neckType">Neck Type</label>
+            <select onchange="submitForm()" name="neckType" class="form-control" id="neckType">
+              <option value="">Select Neck Type</option>
+              {% for item in neckType %}
+              <option 
+              {% selected_atribute request.GET.neckType item.slug %}
+              value="{{item.slug}}">{{item.title}}</option>
+
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- color -->
+          <div class="form-group">
+            <label for="color">Color</label>
+            <select onchange="submitForm()" name="color" class="form-control" id="color">
+              <option value="">Select Color</option>
+              {% for item in color %}
+              <option 
+              {% selected_atribute request.GET.color item.slug %}
+              value="{{item.slug}}">{{item.title}}</option>
+
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- ideal for -->
+          <div class="form-group">
+            <label for="idealFor">Ideal For</label>
+            <select onchange="submitForm()" name="idealFor" class="form-control" id="idealFor">
+              <option value="">--select--</option>
+              {% for item in idealFor %}
+              <option 
+              {% selected_atribute request.GET.idealFor item.slug %}
+              value="{{item.slug}}">{{item.title}}</option>
+
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- sleeve  -->
+          <div class="form-group">
+            <label for="sleeve">Sleeve Type</label>
+            <select  onchange="submitForm()" name="sleeve" class="form-control" id="sleeve">
+              <option value="">--select--</option>
+              {% for item in sleeve %}
+              <option 
+              {% selected_atribute request.GET.sleeve item.slug %}
+              value="{{item.slug}}">{{item.title}}</option>
+
+              {% endfor %}
+            </select>
+          </div>
+
+          <a href="/" class="btn btn-info btn-sm">Clear filter</a>
+        </div>
+        
+      </form>
+    </div>
+    <div class="col">
+      <div class="row">
+        {% for tshirt in tshirts %}
+        <div class="col-4 mx-auto mt-4">
+          <div class="card h-100" style="width: 18rem">
+            <img src="{{tshirt.image.url}}" class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">{{tshirt| title }}</h5>
+
+              <span class="text-danger"
+                ><del>{% min_price tshirt as result %}{{result|rupee}}</del>
+              </span>
+              &nbsp;
+              <span
+                >{% sale_price tshirt as sale_price_result%}{{sale_price_result|rupee}}</span
+              >
+              <span class="float-right badge badge-info">
+                Save {{tshirt.discount}}%</span
+              >
+            </div>
+
+            <div class="card-footer p-0">
+              <a href="product/{{tshirt.slug}}" class="btn btn-light btn-block"
+                >See More</a
+              >
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ function submitForm(){
+
+   document.getElementById('filterForm').submit()
+ } 
+</script>
+{% endblock content %}
